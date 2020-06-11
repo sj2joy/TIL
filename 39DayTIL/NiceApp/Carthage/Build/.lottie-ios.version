@@ -1,0 +1,27 @@
+{
+  "Mac" : [
+    {
+      "name" : "Lottie",
+      "hash" : "4470c2fc9e9188ccb67245fc1ac15e8cc58587db0ef6323e9b6d38a2d957c352",
+      "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+    }
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+    {
+      "name" : "Lottie",
+      "hash" : "cc6ccbb998d72c5db86fcf905c5a9c0ef1e17b94fbab603faccb4c36199ede0d",
+      "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+    }
+  ],
+  "commitish" : "3.1.8",
+  "iOS" : [
+    {
+      "name" : "Lottie",
+      "hash" : "715cb23b7337edf2d55f0e75363ace9334c4e10d45898716f3e978b60300aba5",
+      "swiftToolchainVersion" : "5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+    }
+  ]
+}
