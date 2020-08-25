@@ -1,0 +1,107 @@
+//
+//  MemoFormViewController.swift
+//  MyMemoryUsingStoryboard
+//
+//  Created by mac on 2020/08/18.
+//  Copyright © 2020 Seokjin. All rights reserved.
+//
+
+import UIKit
+
+class MemoFormViewController: UIViewController {
+    
+    var subject: String?
+    
+    @IBOutlet weak var contents: UITextView!
+    @IBOutlet weak var preview: UIImageView!
+    
+    //화면 터치시 네비게이션 바 hidden처리
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let bar = self.navigationController?.navigationBar
+        let touchHidden = TimeInterval(0.3)
+        UIView.animate(withDuration: touchHidden) {
+            bar?.alpha = ( bar?.alpha == 0 ? 1 : 0 )
+        }
+    }
+    
+    @IBAction func save(_ sender: UIBarButtonItem) {
+        let alertV = UIViewController()
+        let iconImage = UIImage(named: "warning-icon-60")
+        alertV.view = UIImageView(image: iconImage)
+        alertV.preferredContentSize = iconImage?.size ?? CGSize.zero
+        
+        guard self.contents.text.isEmpty == false else {
+            let alert = UIAlertController(title: nil,
+                                          message: "내용을 입력해주세요",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK",
+                                          style: .default,
+                                          handler: nil))
+            alert.setValue(alertV, forKey: "contentViewController")
+            self.present(alert, animated: true)
+            return
+        }
+        
+        let data = MemoData()
+        data.title = self.subject
+        data.contents = self.contents.text
+        data.image = self.preview.image
+        data.regdate = Date()
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.memoList.append(data)
+        
+        _ = self.navigationController?.popViewController(animated: true)
+    }
+    @IBAction func pick(_ sender: UIBarButtonItem) {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        self.present(picker, animated: false)
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.contents.delegate = self
+        
+        let bgImage = UIImage(named: "memo-background.png")!
+        self.view.backgroundColor = UIColor(patternImage: bgImage)
+        
+        self.contents.layer.borderWidth = 0
+        self.contents.layer.borderColor = UIColor.clear.cgColor
+        self.contents.backgroundColor = UIColor.clear
+        
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 9
+        self.contents.attributedText = NSAttributedString(string: " ",
+                                                          attributes:
+            [NSAttributedString.Key.paragraphStyle: style])
+        self.contents.text = ""
+    }
+}
+
+//MARK: - UIImagePickerControllerDelegate
+extension MemoFormViewController: UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        self.preview.image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+        
+        picker.dismiss(animated: false, completion: nil)
+    }
+}
+
+
+//MARK: - UINavigationControllerDelegate
+extension MemoFormViewController: UINavigationControllerDelegate {
+    
+}
+
+//MARK: - UITextViewDelegate
+extension MemoFormViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        let contents = textView.text as NSString
+        let length = ((contents.length > 12) ? 12 : contents.length)
+        self.subject = contents.substring(with: NSRange(location: 0, length: length))
+        self.navigationItem.title = subject
+    }
+}
